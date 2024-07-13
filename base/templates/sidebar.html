@@ -1,0 +1,105 @@
+<div class="col-md-12 col-lg-4 sidebar">
+    <div class="sidebar-box search-form-wrap">
+      <form action="#" class="sidebar-search-form">
+        <span class="bi-search"></span>
+        <input
+          type="text"
+          class="form-control"
+          id="s"
+          placeholder="Type a keyword and hit enter"
+        />
+      </form>
+    </div>
+    <!-- END sidebar-box -->
+    {% comment %} <div class="sidebar-box">
+      <div class="bio text-center">
+        <img
+          src="images/person_2.jpg"
+          alt="Image Placeholder"
+          class="img-fluid mb-3"
+        />
+        <div class="bio-body">
+          <h2>Hannah Anderson</h2>
+          <p class="mb-4">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Exercitationem facilis sunt repellendus excepturi beatae
+            porro debitis voluptate nulla quo veniam fuga sit molestias
+            minus.
+          </p>
+          <p>
+            <a href="#" class="btn btn-primary btn-sm rounded px-2 py-2"
+              >Read my bio</a
+            >
+          </p>
+          <p class="social">
+            <a href="#" class="p-2"
+              ><span class="fa fa-facebook"></span
+            ></a>
+            <a href="#" class="p-2"
+              ><span class="fa fa-twitter"></span
+            ></a>
+            <a href="#" class="p-2"
+              ><span class="fa fa-instagram"></span
+            ></a>
+            <a href="#" class="p-2"
+              ><span class="fa fa-youtube-play"></span
+            ></a>
+          </p>
+        </div>
+      </div>
+    </div> {% endcomment %}
+    <!-- END sidebar-box -->
+    <div class="sidebar-box">
+      <h3 class="heading">Popular Posts</h3>
+      <div class="post-entry-sidebar">
+        <ul>
+          {% for post in popular_post|slice:":3"%}
+          <li>
+            <a href="{% url 'post_detail' post.id %}">
+              <img
+                src="{{post.cover.url}}"
+                alt="Image placeholder"
+                class="me-4 rounded"
+              />
+              <div class="text">
+                <h4>
+                  {{post.title}}
+                </h4>
+                <div class="post-meta">
+                  <span class="mr-2">{{post.created_at|date:"M. jS, Y"}}</span>
+                </div>
+              </div>
+            </a>
+          </li>
+          {%endfor%}
+        </ul>
+      </div>
+    </div>
+    <!-- END sidebar-box -->
+
+    <div class="sidebar-box">
+      <h3 class="heading">Categories</h3>
+      <ul class="categories">
+        {%for category in categories%}
+        <li>
+          <a href="{% url 'category' category.name%}">{{category.name}} <span>({{category.posts.count}})</span></a>
+        </li>
+        {%endfor%}
+      </ul>
+    </div>
+    <!-- END sidebar-box -->
+
+    <div class="sidebar-box">
+      <h3 class="heading">Tags</h3>
+      <ul class="tags">
+        {%for tag in tags%}
+        <li><a href="#">{{tag.name}}
+        </a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <!-- END sidebar -->
+</div>
+</div>
+</section>

@@ -1,0 +1,215 @@
+<!-- signup.html -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      #image-preview {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+      
+      #preview {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      
+      /* Center the file input */
+      input[type='file'] {
+        display: block;
+        margin: 0 auto;
+      }
+      .cropping-container {
+        position: relative;
+        width: 204px; /* Adjust size as needed */
+        height: 204px; /* Adjust size as needed */
+        border: 1px solid #ccc;
+        overflow: hidden;
+      }
+      .cropping-container img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      p {
+        text-align: center;
+        margin-top: 10px;
+      }
+      a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Sign Up</h2>
+      <form method="post" enctype="multipart/form-data" id="signup-form">
+        {% csrf_token %}
+        <div id="image-preview" style="display: none; margin-bottom: 10px;">
+          <img id="preview" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+        </div>
+        <label for="avatar">Profile Photo</label>
+        <input type="file" id="avatar" name="avatar" accept="image/*" />
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+        <button type="submit">Register</button>
+      </form>
+      <p>
+        Already have an account? <a href="{% url 'sign_in' %}">Sign In</a>
+      </p>
+    </div>
+
+    <script>
+      document.getElementById('signup-form').addEventListener('submit', function (e) {
+        e.preventDefault()
+        resizeAndSubmit()
+      })
+      
+      document.getElementById('avatar').addEventListener('change', function (e) {
+        const file = e.target.files[0]
+        if (file) {
+          previewImage(file)
+        }
+      })
+      
+      function previewImage(file) {
+        const reader = new FileReader()
+        reader.onload = function (e) {
+          const img = new Image()
+          img.onload = function () {
+            const canvas = document.createElement('canvas')
+            const ctx = canvas.getContext('2d')
+            const size = 300 // Size for profile photo
+            canvas.width = size
+            canvas.height = size
+      
+            // Calculate position to center the image
+            const scale = Math.max(canvas.width / img.width, canvas.height / img.height)
+            const x = canvas.width / 2 - (img.width / 2) * scale
+            const y = canvas.height / 2 - (img.height / 2) * scale
+      
+            // Draw image to canvas
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale)
+      
+            // Display preview
+            const preview = document.getElementById('preview')
+            preview.src = canvas.toDataURL('image/jpeg')
+            document.getElementById('image-preview').style.display = 'block'
+          }
+          img.src = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
+      
+      function resizeAndSubmit() {
+        const file = document.getElementById('avatar').files[0]
+        if (file) {
+          const reader = new FileReader()
+          reader.onload = function (e) {
+            const img = new Image()
+            img.onload = function () {
+              const canvas = document.createElement('canvas')
+              const ctx = canvas.getContext('2d')
+              const size = 300 // Size for profile photo
+              canvas.width = size
+              canvas.height = size
+      
+              // Calculate position to center the image
+              const scale = Math.max(canvas.width / img.width, canvas.height / img.height)
+              const x = canvas.width / 2 - (img.width / 2) * scale
+              const y = canvas.height / 2 - (img.height / 2) * scale
+      
+              // Draw image to canvas
+              ctx.drawImage(img, x, y, img.width * scale, img.height * scale)
+      
+              // Convert canvas to blob
+              canvas.toBlob(
+                function (blob) {
+                  const resizedFile = new File([blob], file.name, {
+                    type: 'image/jpeg',
+                    lastModified: new Date().getTime()
+                  })
+      
+                  // Replace the original file with the resized one
+                  const container = new DataTransfer()
+                  container.items.add(resizedFile)
+                  document.getElementById('avatar').files = container.files
+      
+                  // Submit the form
+                  document.getElementById('signup-form').submit()
+                },
+                'image/jpeg',
+                0.95
+              )
+            }
+            img.src = e.target.result
+          }
+          reader.readAsDataURL(file)
+        } else {
+          // If no file is selected, just submit the form
+          document.getElementById('signup-form').submit()
+        }
+      }
+    </script>
+  </body>
+</html>

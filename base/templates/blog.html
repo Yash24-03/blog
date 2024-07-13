@@ -1,0 +1,25 @@
+{% comment %} <style>
+    .cover-image {
+        width: 100%; /* Ensure image covers its container */
+        height: 300px; /* Set desired height */
+        object-fit: cover; /* Cover the container while preserving aspect ratio */
+    }
+</style>
+
+
+<body>
+{%for p in post%}
+<img src="{{p.cover.url}}" class="cover-image"/>
+<h1>{{p.title}}</h1>
+<p>{{p.content}}</p>
+<strong>Categories:</strong>
+{%for category in p.categories.all%}
+{{category}},
+{% endfor %}
+<br>
+<strong>Tags:</strong>
+{%for tag in p.tags.all%}
+#{{tag}},
+{% endfor %}
+{% endfor %}
+</body> {% endcomment %}

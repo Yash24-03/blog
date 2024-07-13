@@ -1,0 +1,203 @@
+<!-- /*
+* Template Name: Blogy
+* Template Author: Untree.co
+* Template URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+{% extends 'main.html' %}
+{% load static %}
+{% block content%}
+
+    <div
+      class="site-cover site-cover-sm same-height overlay single-page"
+      style="background-image: url('{{post.cover.url}}')"
+    >
+      <div class="container">
+        <div class="row same-height justify-content-center">
+          <div class="col-md-6">
+            <div class="post-entry text-center">
+              <h1 class="mb-4">
+                {{post.title}}
+              </h1>
+              <div class="post-meta align-items-center text-center">
+                <figure class="author-figure mb-0 me-3 d-inline-block">
+                  {%if profile_avatar.avatar%}
+                  <img src="{{profile_avatar.avatar.url}}" alt="Image" class="img-fluid">
+                  {%else%}
+                  <img
+                  src="{% static 'images/default_avatar.png' %}" 
+                  alt="Image placeholder"
+                  class="img-fluid"
+                  />
+                  {%endif%}
+                </figure>
+                <span class="d-inline-block mt-1">By {{post.author}}</span>
+                <span>&nbsp;-&nbsp; {{post.created_at|date:'M. jS, Y'}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="row blog-entries element-animate">
+          <div class="col-md-12 col-lg-8 main-content">
+            <div class="post-content-body">
+
+              <p>{{ post.content|safe }}</p>
+
+            </div>
+
+            <div class="pt-5">
+              <p>
+        
+
+                
+                Categories: 
+                {%for category in post.categories.all%}
+                <a href="{%url 'category' category%}">{{category}}</a>
+                {%endfor%}
+                Tags:
+                {%for tag in post.tags.all%}
+                <a href="#">{{tag}}</a>,
+                {%endfor%}
+              </p>
+            </div>
+
+            <div class="pt-5 comment-wrap">
+              <h3 class="mb-5 heading">{{comments.count}} Comments</h3>
+              <ul class="comment-list">
+                {% for comment in comments %}
+                    <li class="comment" id="comment-{{ comment.id }}">
+                        <div class="vcard">
+                            <!-- Display user image or avatar -->
+                            <!-- Replace with your actual user avatar logic -->
+                             {% if comment.user.customuser.avatar %}
+                             <img src="{{ comment.user.customuser.avatar.url }}" alt="Image" class="img-fluid">
+                             {% else %}
+                            <img src="{% static 'images/default_avatar.png' %}" alt="Image placeholder">
+                            {% endif %}
+                        </div>
+                        <div class="comment-body">
+                            <h3>{{ comment.user.username }}</h3>
+                            <div class="meta">{{ comment.created_at|date:"F d, Y at h:iA" }}</div>
+                            <p>{{ comment.comment }}</p>
+                            <p><a href="#" class="reply rounded" data-parent="{{ comment.id }}">Reply</a></p>
+        
+                            <!-- Display replies -->
+                            {% if comment.replies %}
+                                <ul class="children">
+                                    {% for reply in comment.replies.all %}
+                                        <li class="comment">
+                                            <div class="vcard">
+                                                <!-- Display user image or avatar for reply -->
+                                                <!-- Replace with your actual user avatar logic -->
+                                                <img src="{% static 'images/default_avatar.png' %}" alt="Image placeholder">
+                                            </div>
+                                            <div class="comment-body">
+                                                <h3>{{ reply.user.username }}</h3>
+                                                <div class="meta">{{ reply.created_at|date:"F d, Y at h:iA" }}</div>
+                                                <p>{{ reply.comment }}</p>
+                                                <!-- Option to reply to a reply if needed -->
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+        
+                            <!-- Reply form for each comment -->
+                            {% if request.user.is_authenticated %}
+                                <form method="post" class="reply-form p-3 bg-light" style="display: none;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                    <div class="form-group">
+                                        <textarea name="comment" class="form-control" cols="30" rows="3" placeholder="Your reply..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Post Reply" class="btn btn-primary">
+                                    </div>
+                                </form>
+                            {% else %}
+                                <p><a href="{% url 'sign_in' %}">Log in</a> to reply.</p>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+              <!-- END comment-list -->
+              {% if request.user.is_authenticated %}
+        <div class="comment-form-wrap pt-5">
+            <h3 class="mb-5">Leave a comment</h3>
+            <form method="post" class="p-5 bg-light">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea name="comment" id="comment" class="form-control" cols="30" rows="10" placeholder="Your comment..."></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Post Comment" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <p><a href="{% url 'sign_in' %}">Log in</a> to leave a comment.</p>
+    {% endif %}
+            </div> 
+          </div>
+
+          <!-- END main-content -->
+
+          {% include "sidebar.html" %}
+
+    <!-- Start posts-entry -->
+    <section class="section posts-entry posts-entry-sm bg-light">
+      <div class="container">
+        <div class="row mb-4">
+          <div class="col-12 text-uppercase text-black">More Blog Posts</div>
+        </div>
+        <div class="row">
+          {%for p in more_post|slice:":3"%}
+          <div class="col-md-6 col-lg-3">
+            <div class="blog-entry">
+              <a href="{%url 'post_detail' p.id %}" class="img-link">
+                <img
+                  src="{{p.cover.url}}"
+                  alt="Image"
+                  class="img-fluid"
+                />
+              </a>
+              <span class="date">{{p.created_at|date:"M. jS, Y"}}</span>
+              <h2>
+                <a href="{%url 'post_detail' p.id %}"
+                  >{{p.title}}</a
+                >
+              </h2>
+              <p>{{p.content|truncatewords:10}}</p>
+              <p><a href="{%url 'post_detail' p.id %}" class="read-more">Continue Reading</a></p>
+            </div>
+          </div>
+          {%endfor%}
+        </div>
+      </div>
+    </section>
+    <!-- End posts-entry -->
+
+    <script>
+      // JavaScript to handle reply form toggle
+      document.addEventListener('DOMContentLoaded', function() {
+          const replyLinks = document.querySelectorAll('.reply');
+  
+          replyLinks.forEach(link => {
+              link.addEventListener('click', function(event) {
+                  event.preventDefault();
+                  const parentCommentId = this.getAttribute('data-parent');
+                  const replyForm = document.querySelector(`#comment-${parentCommentId} .reply-form`);
+                  if (replyForm) {
+                      replyForm.style.display = 'block';
+                  }
+              });
+          });
+      });
+  </script>
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends 'main.html' %}
+
+{% block content %}
+  {% load static %}
+  <section class="section bg-light">
+    <div class="container">
+      <div class="row align-items-stretch retro-layout">
+        <div class="col-md-4">
+          <a href="" class="h-entry mb-30 v-height gradient">
+            <div class="featured-img" style="background-image: url('{% static 'images/img_2_horizontal.jpg' %}');"></div>
+            <div class="text">
+              <span class="date">Apr. 14th, 2022</span>
+              <h2>AI can now kill those annoying cookie pop-ups</h2>
+            </div>
+          </a>
+          <a href="" class="h-entry v-height gradient">
+            <div class="featured-img" style="background-image: url('{% static 'images/img_5_horizontal.jpg' %}');"></div>
+
+            <div class="text">
+              <span class="date">Apr. 14th, 2022</span>
+              <h2>Don’t assume your user data in the cloud is safe</h2>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="" class="h-entry img-5 h-100 gradient">
+            <div class="featured-img" style="background-image: url('{% static 'images/img_1_vertical.jpg' %}');"></div>
+
+            <div class="text">
+              <span class="date">Apr. 14th, 2022</span>
+              <h2>Why is my internet so slow?</h2>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="" class="h-entry mb-30 v-height gradient">
+            <div class="featured-img" style="background-image: url('{% static 'images/img_3_horizontal.jpg' %}');"></div>
+
+            <div class="text">
+              <span class="date">Apr. 14th, 2022</span>
+              <h2>Startup vs corporate: What job suits you best?</h2>
+            </div>
+          </a>
+          <a href="" class="h-entry v-height gradient">
+            <div class="featured-img" style="background-image: url('{% static 'images/img_4_horizontal.jpg' %}');"></div>
+
+            <div class="text">
+              <span class="date">Apr. 14th, 2022</span>
+              <h2>Thought you loved Python? Wait until you meet Rust</h2>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End retroy layout blog posts -->
+
+  <!-- Start posts-entry -->
+  {% load static %}
+
+  <section class="section posts-entry">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-sm-6">
+          <h2 class="posts-entry-title">Technology</h2>
+        </div>
+        <div class="col-sm-6 text-sm-end">
+          <a href="#" class="read-more">View All</a>
+        </div>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-9">
+          <div class="row g-3">
+            {% for post in tech_posts|slice:':2' %}
+              <!-- First 4 posts -->
+              <div class="col-md-6">
+                <div class="blog-entry">
+                  <a href="{% url 'post_detail' post.id %}" class="img-link"><img src=" {{ post.cover.url }} " alt="Image" class="img-fluid" /></a>
+                  <span class="date">{{ post.created_at|date:'M. jS, Y' }}</span>
+                  <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+                  <p>{{ post.content|safe|truncatewords:20 }}</p>
+                  <p>
+                    <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-primary">Read More</a>
+                  </p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-md-3">
+          <ul class="list-unstyled blog-entry-sm">
+            {% for post in tech_posts|slice:'2:5' %}
+              <!-- Next 4 posts -->
+              <li>
+                <span class="date">{{ post.created_at|date:'M. jS, Y' }}</span>
+                <h3><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h3>
+                <p>{{ post.content|safe|truncatewords:15 }}</p>
+                <p>
+                  <a href="{% url 'post_detail' post.id %}" class="read-more">Continue Reading</a>
+                </p>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- End posts-entry -->
+
+  <!-- Start posts-entry -->
+  <section class="section posts-entry posts-entry-sm bg-light">
+    <div class="container">
+      <div class="row">
+        {% for post in posts|slice:'4:8:' %}
+          <div class="col-md-6 col-lg-3">
+            <div class="blog-entry">
+              <a href="{% url 'post_detail' post.id %}" class="img-link"><img src="{{ post.cover.url }}" alt="Image" class="img-fluid" /></a>
+              <span class="date">{{ post.created_at|date:'M. jS, Y ' }}</span>
+              <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+              <p>{{ post.content|safe|truncatewords:15 }}</p>
+              <p>
+                <a href="{% url 'post_detail' post.id %}" class="read-more">Continue Reading</a>
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <!-- End posts-entry -->
+
+  <!-- Start posts-entry -->
+  <section class="section posts-entry">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-sm-6">
+          <h2 class="posts-entry-title">Productivity</h2>
+        </div>
+        <div class="col-sm-6 text-sm-end">
+          <a href="category.html" class="read-more">View All</a>
+        </div>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-9 order-md-2">
+          <div class="row g-3">
+            {% for post in prod_posts|slice:':2' %}
+              <div class="col-md-6">
+                <div class="blog-entry">
+                  <a href="{% url 'post_detail' post.id %}" class="img-link"><img src="{{ post.cover.url }}" alt="Image" class="img-fluid" /></a>
+                  <span class="date">{{ post.created_at|date:'M. jS, Y ' }}</span>
+                  <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+                  <p>{{ post.content|safe|truncatewords:15 }}</p>
+                  <p>
+                    <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-primary">Read More</a>
+                  </p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-md-3">
+          <ul class="list-unstyled blog-entry-sm">
+            {% for post in prod_posts|slice:'2:5:' %}
+              <li>
+                <span class="date">{{ post.created_at|date:'M. jS, Y ' }}</span>
+                <h3><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h3>
+                <p>{{ post.content|safe|truncatewords:15 }}</p>
+                <p>
+                  <a href="{% url 'post_detail' post.id %}" class="read-more">Continue Reading</a>
+                </p>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-sm-6">
+          <h2 class="posts-entry-title">Inspiration</h2>
+        </div>
+        <div class="col-sm-6 text-sm-end">
+          <a href="category.html" class="read-more">View All</a>
+        </div>
+      </div>
+
+      <div class="row">
+        {% for post in insp_posts %}
+          <div class="col-lg-4 mb-4">
+            <div class="post-entry-alt">
+              <a href="{% url 'post_detail' post.id %}" class="img-link"><img src="{{ post.cover.url }}" alt="Image" class="img-fluid" /></a>
+              <div class="excerpt">
+                <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+                <div class="post-meta align-items-center text-left clearfix">
+                  <figure class="author-figure mb-0 me-3 float-start">
+                    {% if profile_avatar.avatar %}
+                      <img src="{{ profile_avatar.avatar.url }}" alt="Image" class="img-fluid" />
+                    {% else %}
+                      <img src="{% static 'images/default_avatar.png' %}" alt="Image placeholder" class="img-fluid" />
+                    {% endif %}
+                  </figure>
+                  <span class="d-inline-block mt-1">By <a href="#">{{ post.author }}</a></span>
+                  <span>&nbsp;-&nbsp; {{ post.created_at|date:'M. jS, Y ' }}</span>
+                </div>
+
+                <p>{{ post.content|safe|truncatewords:15 }}</p>
+                <p>
+                  <a href="{% url 'post_detail' post.id %}" class="read-more">Continue Reading</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <div class="section bg-light">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-sm-6">
+          <h2 class="posts-entry-title">Travel</h2>
+        </div>
+        <div class="col-sm-6 text-sm-end">
+          <a href="category.html" class="read-more">View All</a>
+        </div>
+      </div>
+
+      <div class="row align-items-stretch retro-layout-alt">
+        <div class="col-md-5 order-md-2">
+          <a href="" class="hentry img-1 h-100 gradient">
+            <div class="featured-img" style="background-image: url('{% static 'images/img_2_vertical.jpg' %}');"></div>
+            <div class="text">
+              <span>February 12, 2019</span>
+              <h2>Meta unveils fees on metaverse sales</h2>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-7">
+          <a href="" class="hentry img-2 v-height mb30 gradient">
+            <div class="featured-img" style="background-image: url('{% static 'images/img_1_horizontal.jpg' %}');"></div>
+            <div class="text text-sm">
+              <span>February 12, 2019</span>
+              <h2>AI can now kill those annoying cookie pop-ups</h2>
+            </div>
+          </a>
+
+          <div class="two-col d-block d-md-flex justify-content-between">
+            <a href="" class="hentry v-height img-2 gradient">
+              <div class="featured-img" style="background-image: url('{% static 'images/img_2_sq.jpg' %}');"></div>
+              <div class="text text-sm">
+                <span>February 12, 2019</span>
+                <h2>Don’t assume your user data in the cloud is safe</h2>
+              </div>
+            </a>
+            <a href="" class="hentry v-height img-2 ms-auto float-end gradient">
+              <div class="featured-img" style="background-image: url('{% static 'images/img_3_sq.jpg' %}');"></div>
+              <div class="text text-sm">
+                <span>February 12, 2019</span>
+                <h2>Startup vs corporate: What job suits you best?</h2>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Preloader -->
+  <div id="overlayer"></div>
+  <div class="loader">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+{% endblock %}

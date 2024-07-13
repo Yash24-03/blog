@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Blog Post</title>
+    <script src="https://cdn.tiny.cloud/1/{{api_key}}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        .post-form {
+            display: flex;
+            gap: 20px;
+        }
+        .main-content {
+            flex: 2;
+        }
+        .post-settings {
+            flex: 1;
+        }
+        input[type='text'],
+        textarea,
+        input[type='file'] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .tag-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .tag-list li {
+            margin-bottom: 5px;
+        }
+        .image-preview {
+            width: 100%;
+            max-width: 100%;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create New Blog Post</h2>
+        <form method="post" enctype="multipart/form-data" class="post-form">
+            {% csrf_token %}
+            <div class="main-content">
+                <input type="text" name="title" placeholder="Title" required />
+                <textarea name="content" id="content"></textarea>
+                <div>
+                    <label for="cover">Cover Image:</label>
+                    <input type="file" name="cover" id="cover" accept="image/*" />
+                    <div class="image-preview" id="imagePreview">
+                        <!-- Image preview will be displayed here -->
+                    </div>
+                </div>
+                <button type="submit">Publish</button>
+            </div>
+            <div class="post-settings">
+                <h4>Post Settings</h4>
+                <h5>Categories</h5>
+                {{ form.categories }}
+                <h5>Tags</h5>
+                <ul class="tag-list">
+                    {% for tag in form.tags %}
+                        <li>
+                            <label>{{ tag.tag }} {{ tag.choice_label }}</label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        tinymce.init({
+            selector: '#content', // Replace with your textarea ID
+            height: 500,
+            plugins: ['advlist autolink lists link image charmap print preview anchor', 'searchreplace visualblocks code fullscreen', 'insertdatetime table paste code help wordcount'],
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image | help',
+            image_advtab: true,
+        });
+
+        document.getElementById('cover').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = '';
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
