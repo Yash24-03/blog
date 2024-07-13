@@ -1,5 +1,8 @@
 # Ignore .env file
 .env
+db.sqlite3
+list_tables.py
+drop_tables.py
 
 # Ignore Python compiled files
 *.pyc
