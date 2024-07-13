@@ -30,16 +30,11 @@ DEBUG = True
 ALLOWED_HOSTS = ['.vercel.app']
 
 
-
-
-
 # Load environment variables from .env file
 load_dotenv()
 
 # Now you can use the environment variables
 API_KEY = os.getenv('API_KEY')
-
-
 
 
 # Application definition
@@ -53,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base',
     'tinymce',
-    ]
+    'storages',
+]
 
 
 MIDDLEWARE = [
@@ -129,12 +125,35 @@ USE_I18N = True
 USE_TZ = True
 
 
+# AWS S3 settings
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+AWS_S3_FILE_OVERWRITE = False
+
+STORAGES = {
+    # Media file (image) management
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+
+    # CSS and JS file management
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+}
+
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS=[
+STATICFILES_DIRS = [
     BASE_DIR / "base/static"
 ]
 
@@ -146,4 +165,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_URL = '/'
-MEDIA_ROOT = BASE_DIR/ ''
+MEDIA_ROOT = BASE_DIR / ''
