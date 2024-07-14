@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-jqogo6(4qd26a)2mfc%#sk(wxbi-2!_-6ap0l3fl$sk+-8qn$!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['techtales-phi.vercel.app','127.0.0.1']
+ALLOWED_HOSTS = ['.vercel.app','127.0.0.1']
 
 
 # Load environment variables from .env file
