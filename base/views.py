@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Category, Tag, Comment ,CustomUser
+from .models import Post, Category, Tag, Comment, CustomUser
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
 from django.conf import settings
+from django.contrib import messages
+
 
 @login_required
 def create_post(request):
@@ -23,7 +25,7 @@ def create_post(request):
     else:
         form = PostForm()
 
-    return render(request, 'create_post.html', {'form': form,'api_key': settings.API_KEY})
+    return render(request, 'create_post.html', {'form': form, 'api_key': settings.API_KEY})
 # Create your views here.
 
 
@@ -49,13 +51,13 @@ def postdetail(request, pk):
     post = get_object_or_404(Post, id=pk)
     categories = Category.objects.all()
     tags = Tag.objects.all()
-    profile_avatar = CustomUser.objects.filter(user=post.author).values('avatar').first() 
+    profile_avatar = CustomUser.objects.filter(
+        user=post.author).values('avatar').first()
 
     if request.method == "POST":
         comment_text = request.POST.get("comment")
         user = request.user
         parent_id = request.POST.get("parent_id")
-
 
         parent_comment = None
         if parent_id:
@@ -146,12 +148,20 @@ def searchresult(request):
 
 def sign_in(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if not username or not password:
+            messages.error(request, 'Username and password are required.')
+            return render(request, 'sign_in.html')
+
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return redirect('index')  # Redirect to a success page.
+            messages.success(request, 'You have successfully signed in.')
+            # Redirect to the index page after successful login.
+            return redirect('index')
         else:
             messages.error(request, 'Invalid username or password.')
 
@@ -165,19 +175,19 @@ def sign_up(request):
         password = request.POST['password']
         avatar = request.FILES.get('avatar')
 
-        # if User.objects.filter(username=username).exists():
-        #     messages.error(request, 'Username already exists.')
-        # elif User.objects.filter(email=email).exists():
-        #     messages.error(request, 'Email already exists.')
-        # else:
-        user = User.objects.create_user(
-            username=username, email=email, password=password)
-        user.save()
-        
-        user_profile = CustomUser(user=user, avatar=avatar)
-        user_profile.save()
-        
-        return redirect('sign_in')
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists.')
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already exists.')
+        else:
+            user = User.objects.create_user(
+                username=username, email=email, password=password)
+            user.save()
+
+            user_profile = CustomUser(user=user, avatar=avatar)
+            user_profile.save()
+
+            return redirect('sign_in')
 
     return render(request, 'sign_up.html')
 
