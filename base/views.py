@@ -8,9 +8,18 @@ from django.contrib.auth.decorators import login_required
 from .forms import PostForm
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from functools import wraps
 
-
-@login_required
+def admin_only(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_superuser:
+            return view_func(request, *args, **kwargs)
+        else:
+            raise PermissionDenied("Access denied. User must be an admin.")
+    return wrapper
+@admin_only
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)

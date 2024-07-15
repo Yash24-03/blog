@@ -31,9 +31,11 @@
                     <li>
                       <a href="{% url 'sign_out' %}" >Logout</a>
                     </li>
+                    {%if user.is_superuser%}  
                     <li>
                       <a href="{% url 'create_post' %}" >Create Post</a>
                     </li>
+                    {%endif%}
                   </ul>
                 {% else %}
                   <ul class="dropdown">
