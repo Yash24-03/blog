@@ -77,6 +77,40 @@ This project is deployed using Vercel. You can check it out here: https://techta
 5. Browse posts by categories.
 6. Leave comments on posts.
 
+### App Preview:
+
+<table width="100%">
+  <tr>
+    <td width="50%">
+      <p align="center">Home Page</p>
+      <p align="center">
+        <img src=".github/images/home.png" alt="Feed Home">
+      </p>
+    </td>
+    <td width="50%">
+      <p align="center">Post Page</p>
+      <p align="center">
+        <img src=".github/images/post.png" alt="Room Conversation Preview">
+      </p>
+    </td>
+  </tr>
+   <tr>
+    <td width="50%">
+      <p align="center">Search Page</p>
+      <p align="center">
+        <img src=".github/images/search.png" alt="Feed Home">
+      </p>
+    </td>
+    <td width="50%">
+      <p align="center">Editor Page</p>
+      <p align="center">
+        <img src=".github/images/editor.png" alt="Room Conversation Preview">
+      </p>
+    </td>
+  </tr>
+</table>
+
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps to contribute:
